@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     redis-server \
     supervisor \
     bash \
-    && npm install -g pnpm && pnpm install \
+    && npm install -g pnpm \
     && npx playwright install-deps \
     && rm -rf /var/lib/apt/lists/*
 
