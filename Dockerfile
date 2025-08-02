@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.source=https://github.com/any4ai/AnyCrawl
 LABEL org.opencontainers.image.description="AnyCrawl All-in-One Server"
 LABEL org.opencontainers.image.licenses=MIT
 
-# Install system dependencies
+# Install system dependencies - FIXED
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -37,39 +37,19 @@ COPY packages/ai/package.json ./packages/ai/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 
-# Install dependencies - ODSTRAŇTE --ignore-scripts
+# Install dependencies
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
-# DEBUG: Zkontrolujte workspace strukturu
-RUN echo "=== WORKSPACE DEBUG ===" && \
-    pnpm list --depth=0 && \
-    echo "=== CHECKING PACKAGES ===" && \
-    ls -la packages/ && \
-    echo "=== LIBS PACKAGE ===" && \
-    ls -la packages/libs/ && \
-    echo "=== SCRAPE PACKAGE ===" && \
-    ls -la packages/scrape/
-
-# DEBUG: Zkuste build jeden po druhém s detailními logy
-RUN echo "=== BUILDING LIBS ===" && \
-    pnpm build --filter=@anycrawl/libs --reporter=default 2>&1 || \
-    (echo "LIBS BUILD FAILED" && exit 1)
-
-RUN echo "=== BUILDING SCRAPE ===" && \
-    pnpm build --filter=@anycrawl/scrape --reporter=default 2>&1 || \
-    (echo "SCRAPE BUILD FAILED" && exit 1)
-
-# Pokračujte s ostatními...
-RUN pnpm build --filter=@anycrawl/search
-RUN pnpm build --filter=@anycrawl/ai  
-RUN pnpm build --filter=api
+# TRY SIMPLE BUILD FIRST
+RUN pnpm build
 
 # Remove dev dependencies
 RUN rm -rf node_modules
 
+# Zbytek zůstává stejný...
 FROM base AS runtime
 WORKDIR /usr/src/app
 
