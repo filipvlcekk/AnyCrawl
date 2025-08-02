@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     redis-server \
     supervisor \
     bash \
-    && corepack enable \
+    && npm install -g pnpm && pnpm install \
     && npx playwright install-deps \
     && rm -rf /var/lib/apt/lists/*
 
