@@ -42,7 +42,11 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy source code and build dependencies first
 COPY . .
-RUN pnpm build --filter=@anycrawl/libs --filter=@anycrawl/scrape --filter=@anycrawl/search --filter=@anycrawl/ai
+# firstly build core repo
+RUN pnpm build --filter=@anycrawl/libs
+
+# than everything else
+RUN pnpm build --filter=@anycrawl/scrape --filter=@anycrawl/search --filter=@anycrawl/ai
 RUN pnpm build --filter=api
 
 # Remove dev dependencies
