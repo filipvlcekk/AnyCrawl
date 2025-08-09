@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y \
     bash \
     && npm install -g corepack@latest \
     && corepack enable \
-    && corepack prepare pnpm@9.15.0 --activate \  # Pin to a stable version post-key rotation; change to @latest if preferred
+    # Pin to a stable version post-key rotation; change to @latest if preferred
+    && corepack prepare pnpm@9.15.0 --activate \
     && npx playwright install-deps \
     && rm -rf /var/lib/apt/lists/*
 
