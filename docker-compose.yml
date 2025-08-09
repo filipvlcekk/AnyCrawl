@@ -1,4 +1,4 @@
-name: anycrawl
+version: '3.8'
 
 x-common-service: &common-service
     networks:
@@ -36,6 +36,7 @@ services:
 
     scrape-puppeteer:
         <<: *common-service
+        platform: linux/amd64
         build:
             context: .
             dockerfile: packages/scrape/Dockerfile.puppeteer
@@ -44,6 +45,7 @@ services:
             <<: *common-env
         depends_on:
             - redis
+
     scrape-playwright:
         <<: *common-service
         build:
@@ -65,6 +67,7 @@ services:
             <<: *common-env
         depends_on:
             - redis
+
     redis:
         image: redis:7-alpine
         volumes:
