@@ -14,13 +14,16 @@ LABEL org.opencontainers.image.licenses=MIT
 
 # Install system dependencies - FIXED
 RUN apt-get update && apt-get install -y \
+    RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     procps \
     redis-server \
     supervisor \
     bash \
-    && npm install -g pnpm \
+    && npm install -g corepack@latest \
+    && corepack enable \
+    && corepack prepare pnpm@latest --activate \
     && npx playwright install-deps \
     && rm -rf /var/lib/apt/lists/*
 
