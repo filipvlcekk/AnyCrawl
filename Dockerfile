@@ -14,7 +14,6 @@ LABEL org.opencontainers.image.licenses=MIT
 
 # Install system dependencies - FIXED
 RUN apt-get update && apt-get install -y \
-    RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     procps \
@@ -23,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     bash \
     && npm install -g corepack@latest \
     && corepack enable \
-    && corepack prepare pnpm@latest --activate \
+    && corepack prepare pnpm@9.15.0 --activate \  # Pin to a stable version post-key rotation; change to @latest if preferred
     && npx playwright install-deps \
     && rm -rf /var/lib/apt/lists/*
 
