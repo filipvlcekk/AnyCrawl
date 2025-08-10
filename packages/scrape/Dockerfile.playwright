@@ -4,10 +4,11 @@ LABEL org.opencontainers.image.source=https://github.com/any4ai/AnyCrawl
 LABEL org.opencontainers.image.description="AnyCrawl Scrape Playwright Worker"
 LABEL org.opencontainers.image.licenses=MIT
 
-# ENV PNPM_HOME="/pnpm"
-# ENV PATH="$PNPM_HOME:$PATH"
+ENV PNPM_HOME="/pnpm"
+ENV PNPM_STORE_DIR="/pnpm/store"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@8.15.8 --activate
 ENV NODE_ENV=production
-# RUN corepack enable pnpm
 
 RUN npx playwright install-deps
 
