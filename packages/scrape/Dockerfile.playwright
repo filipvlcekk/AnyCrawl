@@ -19,7 +19,7 @@ COPY packages/scrape/package.json ./packages/scrape/package.json
 COPY packages/ai/package.json ./packages/ai/package.json
 COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
 COPY packages/typescript-config/base.json ./packages/typescript-config/base.json
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile --ignore-scripts
 COPY . .
 RUN pnpm build --filter=@anycrawl/scrape
 RUN rm -rf node_modules
@@ -42,7 +42,7 @@ COPY --from=build /usr/src/app/packages/scrape/package.json /usr/src/app/package
 COPY --from=build /usr/src/app/packages/libs/package.json /usr/src/app/packages/libs/package.json
 COPY --from=build /usr/src/app/packages/ai/package.json /usr/src/app/packages/ai/package.json
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-frozen-lockfile --ignore-scripts
 ENV ANYCRAWL_AVAILABLE_ENGINES=playwright
 
 RUN npx -y playwright install chromium

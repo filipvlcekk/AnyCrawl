@@ -22,7 +22,7 @@ COPY --chown=myuser:myuser packages/ai/package.json ./packages/ai/package.json
 COPY --chown=myuser:myuser packages/typescript-config/package.json ./packages/typescript-config/package.json
 COPY --chown=myuser:myuser packages/typescript-config/base.json ./packages/typescript-config/base.json
 USER myuser
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile --ignore-scripts
 COPY --chown=myuser:myuser . .
 RUN pnpm build --filter=@anycrawl/scrape
 RUN rm -rf node_modules
@@ -48,7 +48,7 @@ COPY --chown=myuser:myuser --from=build /usr/src/app/packages/libs/package.json 
 COPY --chown=myuser:myuser --from=build /usr/src/app/packages/ai/package.json /usr/src/app/packages/ai/package.json
 
 USER myuser
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-frozen-lockfile --ignore-scripts
 
 # Ensure puppeteer browsers are properly installed
 RUN npx puppeteer browsers install chrome
