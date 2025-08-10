@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.licenses=MIT
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV NODE_ENV=production
-RUN corepack enable pnpm
+# RUN corepack enable pnpm
 
 FROM base AS build
 WORKDIR /usr/src/app
