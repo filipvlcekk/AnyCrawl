@@ -3,10 +3,19 @@
     "compilerOptions": {
         "outDir": "dist",
         "rootDir": "src",
-        "jsx": "react", // Check this line if missing.
+        "jsx": "react",
         "lib": [
             "dom",
-            "es2015"
+            "es2019"
+        ],
+        "target": "es2022",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "types": [
+            "node",
+            "jest"
         ]
     },
     "include": [
