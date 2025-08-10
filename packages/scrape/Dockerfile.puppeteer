@@ -1,16 +1,19 @@
-FROM --platform=linux/amd64 apify/actor-node-puppeteer-chrome:latest AS base
+FROM node:20-bookworm-slim AS base
 
 LABEL org.opencontainers.image.source=https://github.com/any4ai/AnyCrawl
 LABEL org.opencontainers.image.description="AnyCrawl Scrape Puppeteer Worker"
 LABEL org.opencontainers.image.licenses=MIT
 
-USER root
-
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV NODE_ENV=production
+RUN corepack enable pnpm
 
-# Removed RUN corepack enable pnpm because it causes exec format error on ARM hosts
+# Install dependencies for puppeteer
+RUN apt-get update && apt-get install -y chromium
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 FROM base AS build
 WORKDIR /usr/src/app
@@ -46,12 +49,6 @@ COPY --from=build /usr/src/app/packages/ai/package.json /usr/src/app/packages/ai
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --no-frozen-lockfile --ignore-scripts
 
-# Ensure puppeteer browsers are properly installed
-RUN npx puppeteer browsers install chrome
-
-# Set puppeteer environment variables
-ENV PUPPETEER_CACHE_DIR=/home/myuser/.cache/puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false
 ENV ANYCRAWL_AVAILABLE_ENGINES=puppeteer
 
 CMD [ "node", "dist/Worker.js" ]
